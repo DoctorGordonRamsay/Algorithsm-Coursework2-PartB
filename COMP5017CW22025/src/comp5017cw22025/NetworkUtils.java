@@ -104,24 +104,58 @@ public class NetworkUtils implements INetworkUtils {
    public ListInt aStarPath(Network network, int startIndex, int endIndex) {
        assert 0 <= startIndex && startIndex < network.getNumPlaces() : " start must be a valid station  number";
        assert 0 <= endIndex && endIndex < network.getNumPlaces() : " end must be a valid station  number";
+       assert startIndex != endIndex : "start and index must be different";
+
+       int numplaces = network.getNumPlaces();
         // set Closed to be empty
+        SetInt closed = new SetInt(numplaces);
         // add all nodes in the graph to Open.
+        SetInt open = new SetInt(numplaces);
+        for (int i = 0; i < numplaces; i++) {
+            open.include(i);
+        }
         // set the g-value of Start to 0, and the g-value of all the other nodes to ∞
+        double[] Gvalue = new double[numplaces];
+        for (int i = 0; i < numplaces; i++) {
+            Gvalue[i] = network.NO_LINK;
+        }
         // set previous to be none for all nodes.
+        int[] previous = new int[numplaces];
+        for (int i = 0; i < numplaces; i++) {
+            previous[i] = -1;
+        }
         // while End is not in Closed do
+        while(!closed.contains(endIndex)) {
         // let X be the node in Open  that has the lowest f-value (highest priority) 
+        double[] fvalue = new double[Gvalue];
+        int x = openStationWithMinValue(network, open, fvalue);
         // (f-value is g-value + the heuristic value for that node)
+        
         // remove X from Open and add it to Closed.
+        open.exclude(x);
+        closed.include(x);
         // if X is not equal to End then
+        if(x != endIndex) {}
         //         for each node N that is adjacent to X in the graph, and also in Open do
+            for (int N = 0; N < numplaces; N++) {
+                if (network.getDistance(x, N) != network.NO_LINK && open.contains(N)){
+            
         //             let g’  = g-value of X + cost of edge from X to N
+                        double G = Gvalue[x] + network.getDistance(x, N);
         //             if g’ is less than the current g-value of N then 
+                        if (G < Gvalue[N]) {
         //                 change the g-value of N to g’  Update f-value of N
+                            Gvalue[N] = G;
+                            fvalue[N] = G + network.getDistance(N, endIndex);
         //                 make its previous pointer point to X
-        //             endif
-        //         endfor
-        //     endif
-        // endwhile
+                            previous[N] = x;
+                        } // endif
+                }
+                } //endfor
+
+            } //endif
+
+        } //endwhile
     
         return null;
     }
