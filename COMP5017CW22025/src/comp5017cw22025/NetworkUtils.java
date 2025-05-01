@@ -1,21 +1,22 @@
 package comp5017cw22025;
 
 import java.util.ArrayList;
+import java.util.Collection;
+
 
 /**
  * @author David Lightfoot 2025 sample answer to Coursework 2 Part B
  */
 public class NetworkUtils implements INetworkUtils {
 
-  
-   
-  /**
-     * @pre open must not be empty
+
+    /**
      * @param set of open places
      * @return index of place in open with lowest value in values
-     */    
-     private int openStationWithMinValue(Network network, SetInt open, double[] values) {
-       assert open.getSize() != 0: "open must not be empty";
+     * @pre open must not be empty
+     */
+    private int openStationWithMinValue(Network network, SetInt open, double[] values) {
+        assert open.getSize() != 0 : "open must not be empty";
         int minIndex = -1;
         double minValue = network.NO_LINK;
         for (int i = 0; i != network.getNumPlaces(); i++) {
@@ -26,38 +27,69 @@ public class NetworkUtils implements INetworkUtils {
                 }
             }
         }
-        assert 0 <= minIndex && minIndex < network.getNumPlaces(): " must be a valid station  number";
+        assert 0 <= minIndex && minIndex < network.getNumPlaces() : " must be a valid station  number";
         return minIndex;
     }
-     
-     /**
-     * @param network -- the network
+
+    /**
+     * @param network    -- the network
      * @param startIndex -- index of start station
-     * @param endIndex -- index of start station
+     * @param endIndex   -- index of start station
+     * @return list of station indexes in shortest path between startIndex and endIndex
      * @pre startIndex and endIndex are valid station indexes
      * @pre startIndex != endIndex
-     * @return list of station indexes in shortest path between startIndex and endIndex
      */
-   public ListInt dijkstraPath(Network network, int startIndex, int endIndex) {
+    public ListInt dijkstraPath(Network network, int startIndex, int endIndex) {
+        assert 0 <= startIndex && startIndex < network.getNumPlaces() : " start must be a valid station  number";
+        assert 0 <= endIndex && endIndex < network.getNumPlaces() : " end must be a valid station  number";
+        assert startIndex != endIndex : "start and index must be different";
+
+        int numplaces = network.getNumPlaces();
         // set Closed to be empty
+        SetInt closed = new SetInt(numplaces);
         // add all nodes in the graph to Open.
+        SetInt open = new SetInt(numplaces);
+        for (int i = 0; i < numplaces; i++) {
+            open.include(i);
+        }
         // set the g-value of Start to 0, and the g-value of all the other nodes to ∞
+        double[] Gvalue = new double[numplaces];
+        for (int i = 0; i < numplaces; i++) {
+            Gvalue[i] = network.NO_LINK;
+        }
+        Gvalue[startIndex] = 0;
         // set previous to be none for all nodes.
+        int[] previous = new int[numplaces];
+        for (int i = 0; i < numplaces; i++) {
+            previous[i] = -1;
+        }
         // while End is not in Closed do
-        // let X be the node in Open  that has the lowest g-value (highest priority)
-        // remove X from Open and add it to Closed.
-        // if X is not equal to End then
-        //         for each node N that is adjacent to X in the graph, and also in Open do
-        //             let g’  = g-value of X + cost of edge from X to N
-        //             if g’ is less than the current g-value of N then 
-        //                 change the g-value of N to g’ 
-        //                 make N’s previous pointer point to X
-        //             endif
-        //         endfor
-        //     endif
-        // endwhile
-    
-        return null;
+        while (!closed.contains(endIndex)) {
+            // let X be the node in Open  that has the lowest g-value (highest priority)
+            int x = openStationWithMinValue(network, open, Gvalue);
+            // remove X from Open and add it to Closed.
+            open.exclude(x);
+            closed.include(x);
+            // if X is not equal to End then
+            if (x != endIndex) {
+                //         for each node N that is adjacent to X in the graph, and also in Open do
+                for (int N = 0; N < numplaces; N++) {
+                    if (network.getDistance(x, N) != network.NO_LINK && open.contains(N)) {
+                        //             let g’  = g-value of X + cost of edge from X to N
+                        double G = Gvalue[x] + network.getDistance(x, N);
+                        //             if g’ is less than the current g-value of N then
+                        if (G < Gvalue[N]) {
+                            Gvalue[N] = G;
+                            previous[N] = x;
+                        }//endif
+                    }
+                } //endfor
+
+            } // endif
+        } // endwhile
+
+        return path;
+        
     }
    
    
@@ -69,7 +101,9 @@ public class NetworkUtils implements INetworkUtils {
      * @pre startIndex != endIndex
      * @return list of station indexes in shortest path between startIndex and endIndex
      */
-   public ListInt aStarPath(Network network, int startIndex, int endIndex) {    
+   public ListInt aStarPath(Network network, int startIndex, int endIndex) {
+       assert 0 <= startIndex && startIndex < network.getNumPlaces() : " start must be a valid station  number";
+       assert 0 <= endIndex && endIndex < network.getNumPlaces() : " end must be a valid station  number";
         // set Closed to be empty
         // add all nodes in the graph to Open.
         // set the g-value of Start to 0, and the g-value of all the other nodes to ∞
