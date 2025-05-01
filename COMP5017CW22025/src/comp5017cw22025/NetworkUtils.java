@@ -39,7 +39,24 @@ public class NetworkUtils implements INetworkUtils {
      * @return list of station indexes in shortest path between startIndex and endIndex
      */
    public ListInt dijkstraPath(Network network, int startIndex, int endIndex) {
-        
+        // set Closed to be empty
+        // add all nodes in the graph to Open.
+        // set the g-value of Start to 0, and the g-value of all the other nodes to ∞
+        // set previous to be none for all nodes.
+        // while End is not in Closed do
+        // let X be the node in Open  that has the lowest g-value (highest priority)
+        // remove X from Open and add it to Closed.
+        // if X is not equal to End then
+        //         for each node N that is adjacent to X in the graph, and also in Open do
+        //             let g’  = g-value of X + cost of edge from X to N
+        //             if g’ is less than the current g-value of N then 
+        //                 change the g-value of N to g’ 
+        //                 make N’s previous pointer point to X
+        //             endif
+        //         endfor
+        //     endif
+        // endwhile
+    
         return null;
     }
    
@@ -53,7 +70,25 @@ public class NetworkUtils implements INetworkUtils {
      * @return list of station indexes in shortest path between startIndex and endIndex
      */
    public ListInt aStarPath(Network network, int startIndex, int endIndex) {    
-        
+        // set Closed to be empty
+        // add all nodes in the graph to Open.
+        // set the g-value of Start to 0, and the g-value of all the other nodes to ∞
+        // set previous to be none for all nodes.
+        // while End is not in Closed do
+        // let X be the node in Open  that has the lowest f-value (highest priority) 
+        // (f-value is g-value + the heuristic value for that node)
+        // remove X from Open and add it to Closed.
+        // if X is not equal to End then
+        //         for each node N that is adjacent to X in the graph, and also in Open do
+        //             let g’  = g-value of X + cost of edge from X to N
+        //             if g’ is less than the current g-value of N then 
+        //                 change the g-value of N to g’  Update f-value of N
+        //                 make its previous pointer point to X
+        //             endif
+        //         endfor
+        //     endif
+        // endwhile
+    
         return null;
     }
    
