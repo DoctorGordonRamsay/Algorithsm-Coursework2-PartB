@@ -2,6 +2,7 @@ package comp5017cw22025;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Stack;
 
 
 /**
@@ -99,7 +100,7 @@ public class NetworkUtils implements INetworkUtils {
 
             } // endif
         } // endwhile
-        
+
         // reconstruct the shortest path from Start to End by following "previous" pointers
         // to find the previous node to End, the previous node to that previous node, and so on
         ListInt path = new ListInt(15);
@@ -157,10 +158,20 @@ public class NetworkUtils implements INetworkUtils {
             previous[i] = -1;
         }
 
+        double[] heuristic = new double[numplaces];
+        for (int i = 0; i < numplaces; i++) {
+            IPlaceInfo place = network.getPlaceInfo(i);
+            IPlaceInfo endPlace = network.getPlaceInfo(endIndex);
+
+            double easting = place.getEasting() - endPlace.getEasting();
+            double northing = place.getNorthing() - endPlace.getNorthing();
+            heuristic[i] = Math.sqrt(easting * easting + northing * northing);
+        }
+
         double[] fvalue = new double[numplaces]; // (f-value is g-value + the heuristic value for that node)
         for (int i = 0; i < numplaces; i++) {
             if (i == startIndex) {
-                fvalue[i] = Gvalue[i] + network.getDistance(i, endIndex);
+                fvalue[i] = Gvalue[i] + heuristic[i];
             } else {
                 fvalue[i] = network.NO_LINK;
             }
@@ -193,7 +204,7 @@ public class NetworkUtils implements INetworkUtils {
 
                              //change the g-value of N to g’  Update f-value of N
                             Gvalue[N] = G;
-                            fvalue[N] = G + network.getDistance(N, endIndex);
+                            fvalue[N] = G + heuristic[N];
 
                              //make its previous pointer point to X
                             previous[N] = x;
@@ -206,7 +217,7 @@ public class NetworkUtils implements INetworkUtils {
 
         } //endwhile
     
-        // reconstruct the shortest path from Start to End by following "previous" pointers
+      // reconstruct the shortest path from Start to End by following "previous" pointers
         // to find the previous node to End, the previous node to that previous node, and so on
         ListInt path = new ListInt(15);
         int current = endIndex;

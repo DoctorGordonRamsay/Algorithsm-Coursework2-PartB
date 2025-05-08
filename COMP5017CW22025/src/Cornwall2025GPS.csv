@@ -1,0 +1,21 @@
+place Rame 50.316948232622146 -4.216614835571948
+place Antony  50.318502960062055 -4.18903333581188
+place Cawsand   50.33155571095996 -4.20101229363877
+place Kingsand   50.33327755162112 -4.20066807659632
+place Millbrook   50.34788973036748 -4.21831799923697
+place Penlee   50.31882017474713 -4.18958005624689
+place Polbathic   50.38884679072266 -4.32545412313098
+
+
+link Rame  Penlee 1.2
+link Rame  Millbrook 3.4
+link Millbrook  Cawsand 3.0
+link Cawsand Kingsand 1.5
+link Kingsand  Rame 2.5
+
+place Treninnow   50.34057313047791 -4.22989168127555
+
+link Millbrook  Treninnow 1.2
+link Millbrook  Antony 6.5
+link Antony Polbathic 7.7
+link Polbathic Rame 12.8
